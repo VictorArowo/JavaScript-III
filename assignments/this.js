@@ -19,7 +19,7 @@
 // Principle 1
 
 // code example for Window Binding
-function testThis(){
+function windowBinder(){
     return this;
 }
 
@@ -28,7 +28,7 @@ function testThis(){
 // code example for Implicit Binding
 const testThis = {
     name: 'This Tester',
-    test: function(name) {
+    test: function() {
       console.log(`${this.name} is my name`);
       console.log(this);
     }
@@ -50,4 +50,4 @@ function ThisTester(name) {
 // Principle 4
 
 // code example for Explicit Binding
-test.tester.call("Called");
+tester.test.call("Called");
