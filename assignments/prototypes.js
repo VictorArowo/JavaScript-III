@@ -45,6 +45,28 @@
   - When eating an edible, it should be pushed into a "stomach" property which is an array.
   - Give persons the ability to poop.
   - When pooping, the stomach should empty.
+*/
+
+  function Person(name, age){
+    this.name = name;
+    this.age = age;
+    this.stomach = [];
+  }
+
+  Person.prototype.greet = function(){
+    return `Name - ${this.name} Age - ${this.age}`;
+  }
+
+  Person.prototype.eatEdibles = function(edible){
+    this.stomach.push(edible);
+  }
+
+  Person.prototype.poop = function(){
+    this.stomach.length = 0;
+  }
+
+
+/*
 
   TASK 2
 
@@ -56,12 +78,53 @@
   - Give cars the ability to be repaired.
   - A repaired car can be driven again.
 
+  */
+
+  function Car (name, make){
+    this.name =  name;
+    this.make = make;
+    this.odometer = 0;
+    this.isCrashed= false;
+  }
+
+  Car.prototype.drive = function(distance){
+    if (!this.isCrashed){
+      this.odometer += distance;
+    }
+    else{
+      return `I crashed at ${this.odometer} miles`;
+    }
+  }
+
+  Car.prototype.crash = function(){
+    this.isCrashed = true;
+  }
+
+  Car.prototype.repair = function(){
+    this.isCrashed = false;
+  }
+  /*
+
   TASK 3
 
   - Build a Baby constructor that subclasses the Person built earlier.
   - Babies of course inherit the ability to greet, which can be strange.
   - Babies should have the ability to play, which persons don't.
   - By playing, a string is returned with some text of your choosing.
+
+  */
+
+  function Baby (name, age){
+    Person.call(this, name, age);
+  }
+
+  Baby.prototype = Object.create(Person.prototype);
+
+  Baby.prototype.play = function() {
+    return `This is how a baby plays`
+  }
+
+  /*
 
   TASK 4
 
@@ -70,7 +133,26 @@
   complicated one with lots of state. Surprise us!
 
 */
+  function  Employee(data){
+    this.id = data.id;
+    this.firstName = data.firstName;
+    this.lastName = data.lastName;
+    this.position = data.position;
+    this.office = data.office;
+    this.isManager = false;
+  }
 
+  Employee.prototype.view = function() {
+    return `Employee with ID - ${this.id} is named ${this.firstName} ${this.lastName}`
+  }
+
+  Employee.prototype.promote = function(){
+    this.isManager = true;
+  }
+
+  Employee.prototype.switchOffices = function(office){
+    this.office = office;
+  }
 /*
 
   STRETCH TASK
@@ -89,13 +171,30 @@
   * dimensions (These represent the character's size in the video game)
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
+function GameObject(props){
+  this.createdAt = props.createdAt;
+  this.name = props.name;
+  this.dimensions = props.dimensions;
+}
 
+GameObject.prototype.destroy = function(){
+  return `${this.name} was removed from the game.`
+}
 /*
   === CharacterStats ===
   * healthPoints
   * takeDamage() // prototype method -> returns the string '<object name> took damage.'
   * should inherit destroy() from GameObject's prototype
 */
+function CharacterStats(props){
+  GameObject.call(this, props);
+  this.healthPoints = props.healthPoints;
+}
+
+CharacterStats.prototype = Object.create(GameObject.prototype);
+CharacterStats.prototype.takeDamage = function(){
+  return `${this.name} took damage.`
+} 
 
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -106,6 +205,17 @@
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
+function Humanoid(props){
+  CharacterStats.call(this, props);
+  this.team = props.team;
+  this.weapons = props.weapons;
+  this.language = props.language;
+}
+
+Humanoid.prototype = Object.create(CharacterStats.prototype);
+CharacterStats.prototype.greet = function(){
+  return `${this.name} offers a greeting in ${this.language}`
+} 
 
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
@@ -115,62 +225,62 @@
 
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
-/*
-  const mage = new Humanoid({
-    createdAt: new Date(),
-    dimensions: {
-      length: 2,
-      width: 1,
-      height: 1,
-    },
-    healthPoints: 5,
-    name: 'Bruce',
-    team: 'Mage Guild',
-    weapons: [
-      'Staff of Shamalama',
-    ],
-    language: 'Common Tongue',
-  });
-  const swordsman = new Humanoid({
-    createdAt: new Date(),
-    dimensions: {
-      length: 2,
-      width: 2,
-      height: 2,
-    },
-    healthPoints: 15,
-    name: 'Sir Mustachio',
-    team: 'The Round Table',
-    weapons: [
-      'Giant Sword',
-      'Shield',
-    ],
-    language: 'Common Tongue',
-  });
-  const archer = new Humanoid({
-    createdAt: new Date(),
-    dimensions: {
-      length: 1,
-      width: 2,
-      height: 4,
-    },
-    healthPoints: 10,
-    name: 'Lilith',
-    team: 'Forest Kingdom',
-    weapons: [
-      'Bow',
-      'Dagger',
-    ],
-    language: 'Elvish',
-  });
-  console.log(mage.createdAt); // Today's date
-  console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
-  console.log(swordsman.healthPoints); // 15
-  console.log(mage.name); // Bruce
-  console.log(swordsman.team); // The Round Table
-  console.log(mage.weapons); // Staff of Shamalama
-  console.log(archer.language); // Elvish
-  console.log(archer.greet()); // Lilith offers a greeting in Elvish.
-  console.log(mage.takeDamage()); // Bruce took damage.
-  console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
+
+  // const mage = new Humanoid({
+  //   createdAt: new Date(),
+  //   dimensions: {
+  //     length: 2,
+  //     width: 1,
+  //     height: 1,
+  //   },
+  //   healthPoints: 5,
+  //   name: 'Bruce',
+  //   team: 'Mage Guild',
+  //   weapons: [
+  //     'Staff of Shamalama',
+  //   ],
+  //   language: 'Common Tongue',
+  // });
+  // const swordsman = new Humanoid({
+  //   createdAt: new Date(),
+  //   dimensions: {
+  //     length: 2,
+  //     width: 2,
+  //     height: 2,
+  //   },
+  //   healthPoints: 15,
+  //   name: 'Sir Mustachio',
+  //   team: 'The Round Table',
+  //   weapons: [
+  //     'Giant Sword',
+  //     'Shield',
+  //   ],
+  //   language: 'Common Tongue',
+  // });
+  // const archer = new Humanoid({
+  //   createdAt: new Date(),
+  //   dimensions: {
+  //     length: 1,
+  //     width: 2,
+  //     height: 4,
+  //   },
+  //   healthPoints: 10,
+  //   name: 'Lilith',
+  //   team: 'Forest Kingdom',
+  //   weapons: [
+  //     'Bow',
+  //     'Dagger',
+  //   ],
+  //   language: 'Elvish',
+  // });
+  // console.log(mage.createdAt); // Today's date
+  // console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
+  // console.log(swordsman.healthPoints); // 15
+  // console.log(mage.name); // Bruce
+  // console.log(swordsman.team); // The Round Table
+  // console.log(mage.weapons); // Staff of Shamalama
+  // console.log(archer.language); // Elvish
+  // console.log(archer.greet()); // Lilith offers a greeting in Elvish.
+  // console.log(mage.takeDamage()); // Bruce took damage.
+  // console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
+
